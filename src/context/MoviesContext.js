@@ -1,7 +1,7 @@
 import { createContext, useReducer } from "react";
 import { useContext } from "react";
 import { fetchMovies as fetchAllMovies } from "../api/fetch/movies";
-import { SET_MOVIES, START_FETCHING } from "../reducers/actions";
+import { SET_MOVIES, START_FETCHING, NEXT_MOVIE } from "../reducers/actions";
 import reducer from "../reducers/MoviesReducer";
 
 const MoviesContext = createContext();
@@ -9,6 +9,7 @@ const MoviesContext = createContext();
 const initialState = {
   movies: [],
   loaded: false,
+  currentMovie: 0,
 };
 
 export const MoviesProvider = ({ children }) => {
@@ -24,11 +25,16 @@ export const MoviesProvider = ({ children }) => {
     }
   };
 
+  const setNextMovie = () => {
+    dispatch({ type: NEXT_MOVIE });
+  };
+
   return (
     <MoviesContext.Provider
       value={{
         ...state,
         fetchMovies,
+        setNextMovie,
       }}
     >
       {children}

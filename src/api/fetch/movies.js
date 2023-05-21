@@ -7,4 +7,20 @@ async function fetchMovies() {
   return movies;
 }
 
-export { fetchMovies };
+async function putRequest(type, id) {
+  const requestOptions = {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ mess: "PUT request" }),
+  };
+
+  await fetch(`${api}/recommendations/${id}/${type}`, requestOptions)
+    .then(async (response) => {
+      const data = await response.json();
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+export { fetchMovies, putRequest };

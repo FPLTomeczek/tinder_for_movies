@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useDrag } from "react-dnd";
 import { useMoviesContext } from "../context/MoviesContext";
 import {
@@ -11,32 +10,31 @@ import {
   IconButton,
   CircularProgress,
 } from "@mui/material";
+import { putRequest } from "../api/fetch/movies";
 
 import DoneIcon from "@mui/icons-material/Done";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-
-const recommendations = [
-  {
-    id: "1and3011",
-    imageURL:
-      "https://images-na.ssl-images-amazon.com/images/M/MV5BMTUzNTE2NTkzMV5BMl5BanBnXkFtZTgwMDAzOTUyMDI@._V1_SY1000_CR0,0,674,1000_AL_.jpg",
-    title: "Inferno",
-    summary: "Lorem ipsum….",
-    rating: 5.3,
-  },
-  {
-    id: "2301abc",
-    imageURL:
-      "https://images-na.ssl-images-amazon.com/images/M/MV5BOTAzODEzNDAzMl5BMl5BanBnXkFtZTgwMDU1MTgzNzE@._V1_SY1000_CR0,0,677,1000_AL_.jpg",
-    title: "Star Wars: Episode VII - The Force Awakens",
-    summary: "Lorem ipsum….",
-    rating: 8.2,
-  },
-];
+import { useEffect, useRef, useState } from "react";
 
 const Movie = () => {
-  const [currentMovie, setCurrentMovie] = useState(0);
-  const { movies, loaded } = useMoviesContext();
+  const { movies, loaded, currentMovie, setNextMovie } = useMoviesContext();
+  const [position, setPosition] = useState({});
+  const boxRef = useRef(null);
+  // let rect;
+
+  // const getPosition = () => {
+  //   const { top, left } = document
+  //     .getElementById("paper")
+  //     .getBoundingClientRect();
+  //   setPosition({ top, left });
+  // };
+
+  useEffect(() => {
+    if (boxRef.current) {
+      const { top, left } = boxRef.current.getBoundingClientRect();
+      console.log("Div position:", { top, left });
+    }
+  }, []);
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "movie",
@@ -52,7 +50,7 @@ const Movie = () => {
   if (currentMovie > movies.length - 1) {
     return (
       <Box>
-        <Button variant="contained" onClick={() => setCurrentMovie(0)}>
+        <Button variant="contained" onClick={() => setNextMovie()}>
           refresh
         </Button>
       </Box>
@@ -64,13 +62,15 @@ const Movie = () => {
   return (
     <Box>
       <Container maxWidth="sm">
-        <Box>
+        <Box ref={boxRef}>
           <Paper
+            id="paper"
             ref={drag}
             sx={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              position: "relative",
             }}
             elevation={3}
           >
@@ -98,14 +98,20 @@ const Movie = () => {
               <IconButton
                 color="success"
                 size="large"
-                onClick={() => setCurrentMovie((prev) => prev + 1)}
+                onClick={() => {
+                  setNextMovie();
+                  putRequest("accept", id);
+                }}
               >
                 <DoneIcon sx={{ fontSize: "36px" }} />
               </IconButton>
               <IconButton
                 color="error"
                 size="large"
-                onClick={() => setCurrentMovie((prev) => prev + 1)}
+                onClick={() => {
+                  setNextMovie();
+                  putRequest("reject", id);
+                }}
               >
                 <HighlightOffIcon sx={{ fontSize: "36px" }} />
               </IconButton>
