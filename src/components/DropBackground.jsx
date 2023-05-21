@@ -1,10 +1,11 @@
 import React from "react";
 
-const DropBackground = () => {
+const DropBackground = ({ drop }) => {
   return (
     <div
+      ref={drop}
       style={{
-        width: "50vw",
+        width: "100vw",
         height: "100vh",
         border: "1px solid black",
         boxSizing: "border-box",

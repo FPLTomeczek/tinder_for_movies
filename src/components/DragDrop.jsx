@@ -6,7 +6,7 @@ import { useDrop } from "react-dnd";
 
 const DragDrop = () => {
   const [{ isOver }, drop] = useDrop(() => ({
-    accept: "image",
+    accept: "movie",
     drop: () => console.log("dropped"),
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
@@ -15,11 +15,14 @@ const DragDrop = () => {
 
   return (
     <>
-      <div ref={drop}>
-        <DropBackground />
-      </div>
+      <DropBackground drop={drop} />
       <Draggable>
-        <div>
+        <div
+          style={{
+            width: "400px",
+            margin: "0 auto",
+          }}
+        >
           <Movie />
         </div>
       </Draggable>

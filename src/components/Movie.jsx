@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useDrag } from "react-dnd";
+import { useMoviesContext } from "../context/MoviesContext";
 import {
   Box,
   Paper,
@@ -8,6 +9,7 @@ import {
   Button,
   Container,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 
 import DoneIcon from "@mui/icons-material/Done";
@@ -33,7 +35,8 @@ const recommendations = [
 ];
 
 const Movie = () => {
-  const [currentMovie, setCurrentMovie] = useState(1);
+  const [currentMovie, setCurrentMovie] = useState(0);
+  const { movies, loaded } = useMoviesContext();
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "movie",
@@ -42,18 +45,11 @@ const Movie = () => {
     }),
   }));
 
-  // return (
-  //   <div style={{ display: "flex", flexDirection: "column" }}>
-  //     <p></p>
-  //     <img src={imageURL} alt="moviePoster" />
-  //     <div className="buttons">
-  //       <button>1</button>
-  //       <button>2</button>
-  //     </div>
-  //   </div>
-  // );
+  if (!loaded) {
+    return <CircularProgress />;
+  }
 
-  if (currentMovie > recommendations.length - 1) {
+  if (currentMovie > movies.length - 1) {
     return (
       <Box>
         <Button variant="contained" onClick={() => setCurrentMovie(0)}>
@@ -63,14 +59,14 @@ const Movie = () => {
     );
   }
 
-  const { imageURL, title, summary, rating, id } =
-    recommendations[currentMovie];
+  const { imageURL, title, summary, rating, id } = movies[currentMovie];
 
   return (
-    <Box ref={drag}>
+    <Box>
       <Container maxWidth="sm">
         <Box>
           <Paper
+            ref={drag}
             sx={{
               display: "flex",
               flexDirection: "column",
