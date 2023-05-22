@@ -10,6 +10,7 @@ const initialState = {
   movies: [],
   loaded: false,
   currentMovie: 0,
+  movie: {},
 };
 
 export const MoviesProvider = ({ children }) => {

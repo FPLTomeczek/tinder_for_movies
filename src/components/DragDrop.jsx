@@ -1,22 +1,20 @@
 import React from "react";
 import Movie from "./Movie";
-import DropBackground from "./DropBackground";
-import Draggable from "react-draggable";
+import { useMoviesContext } from "../context/MoviesContext";
+import RefreshButton from "./RefreshButton";
 
 const DragDrop = () => {
+  const { movie, loaded, currentMovie, movies } = useMoviesContext();
+
   return (
     <>
-      <DropBackground />
-      <Draggable>
-        <div
-          style={{
-            width: "400px",
-            margin: "0 auto",
-          }}
-        >
-          <Movie />
-        </div>
-      </Draggable>
+      {loaded ? (
+        currentMovie < movies.length ? (
+          <Movie movie={movie} />
+        ) : (
+          <RefreshButton />
+        )
+      ) : null}
     </>
   );
 };
